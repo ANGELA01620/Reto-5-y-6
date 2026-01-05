@@ -1,4 +1,4 @@
-# 🏛️ Reto Final: The SQL Architect & Tuner Protocol
+# 🏛️ Reto SQL Architect & Tuner Protocol
 
 **Diplomado en Gestión de Datos 2026 | Módulos: Diseño Relacional y SQL Performance**
 
