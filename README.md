@@ -49,5 +49,5 @@ $$\text{INNER JOIN} \implies \downarrow \text{Lecturas Lógicas} \ + \ \uparrow 
 
 * **/sql**: Scripts de creación de tablas, consultas y pruebas de desempeño.
 * **/docs**: PDF con el diagrama entidad-relación (DER) y análisis de resultados.
-
+* **/data**: los datos para el ejercicio.
 ---
