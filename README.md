@@ -1,52 +1,53 @@
-# 🏛️ Reto SQL Architect & Tuner Protocol
+# 🏛️ Reto #5 Y 6
 
-**Diplomado en Gestión de Datos 2026 | Módulos: Diseño Relacional y SQL Performance**
 
----
 
-## 🛑 Contexto Crítico del Negocio
-Eres el nuevo **Lead Data Engineer** de **LegacyRetail S.A.**, una empresa que está a punto de colapsar técnicamente.
-
-### El Problema
-Durante 10 años, la empresa registró sus ventas en una sola "hoja de cálculo infinita" (Flat File). Recientemente, intentaron migrar esto a SQL Server tal cual (una sola tabla gigante), lo que causó dos desastres:
-1.  **Inconsistencia de Datos:** El cliente "Juan Pérez" está escrito de 5 formas distintas y su dirección no coincide.
-2.  **Caída del Servidor:** El desarrollador junior intentó hacer un reporte de combinaciones de productos usando un `CROSS JOIN`, lo que generó un bucle que consumió el 100% de la CPU y tumbó el servicio de facturación.
-
-### 🎯 Tu Misión
-Tienes 2 objetivos mandatorios para salvar la operación:
-
-#### Misión A: Ingeniería Inversa (Normalización 3NF)
-Debes tomar el archivo sucio (`raw_sales_dump.csv`), analizar sus patrones y diseñar un **Esquema Relacional Normalizado** (Tablas separadas con relaciones lógicas) que elimine la redundancia.
-
-#### Misión B: Auditoría de Performance (Tuning)
-Debes replicar el error del desarrollador junior en un entorno controlado y demostrar con **métricas de ingeniería** (Lecturas Lógicas y Tiempo de CPU) por qué su consulta mató al servidor, proponiendo la solución óptima (`INNER JOIN`).
+## 📌 Objetivo del proyecto
+El objetivo principal de este repositorio es cumplir con el reto propuesto, el cual consiste en diseñar un esquema relacional normalizado, cargar datos en **SQL Server** y analizar el desempeño de diferentes tipos de consultas SQL, específicamente comparando el impacto de un $CROSS \ JOIN$ frente a un $INNER \ JOIN$.
 
 ---
 
-## 🛠️ Instrucciones de Entrega
+## 🛑 El Problema: El Desastre del Flat File
+Para este reto, se analizó un escenario crítico basado en una empresa que durante 10 años registró sus ventas en una sola "hoja de cálculo infinita". Al intentar migrar esto a SQL Server sin un diseño previo, surgieron dos problemas graves:
 
-El repositorio ya contiene las carpetas necesarias. Debes completar y subir:
-
-### 1. Diseño (`/02_sql/1_ddl_diseno/`)
-* **Archivo:** `solution_schema.sql`
-* **Requisito:** Código DDL para crear tablas `Clientes`, `Productos`, `Sucursales` y `Ventas`.
-* **Condición:** Todas las tablas deben tener `PRIMARY KEY`. Las relaciones deben tener `FOREIGN KEY`. Usa tipos de datos eficientes (`INT`, `VARCHAR`, `DECIMAL`).
-
-### 2. Performance (`/02_sql/2_performance_lab/`)
-* **Archivo:** `solution_tuning.sql`
-* **Requisito:** Script que ejecute la comparativa entre Cross Join e Inner Join activando `STATISTICS IO`.
-
-### 3. Reporte Final (`/03_docs/entregables/`)
-* **Archivo:** `Reporte_Tecnico.pdf`
-* **Contenido:**
-    * Diagrama Entidad-Relación (DER).
-    * Captura de pantalla de los mensajes de SQL Server mostrando la reducción de *Logical Reads*.
+1.  **Inconsistencia de Datos (Anomalías de Actualización):** La falta de normalización permitió que un mismo cliente (ej. "Juan Pérez") estuviera registrado de múltiples formas, impidiendo la integridad de la información.
+2.  **Colapso del Sistema por Desempeño:** El uso incorrecto de un `CROSS JOIN` para reportes de productos provocó un crecimiento exponencial de registros, consumiendo el $100\%$ de la CPU y deteniendo el servicio de facturación.
 
 ---
 
-## 📚 Recursos de Apoyo (¡Léelos!)
-En la carpeta `03_docs/teoria_y_guias/` encontrarás:
-* `GUIA_NORMALIZACION_3NF.md`: Tutorial paso a paso para pasar de Excel a SQL.
-* `GUIA_PERFORMANCE_TUNING.md`: Cómo interpretar los planes de ejecución y lecturas.
+## 🛠️ Desarrollo del reto
 
-¡Manos a la obra, Ingeniero!
+Para solucionar estos problemas, se realizaron las siguientes etapas:
+
+1. **Diseño del esquema relacional**
+   Se crearon las entidades **Cliente, Producto, Sucursal y Venta**, aplicando normalización en **Tercera Forma Normal (3NF)** y definiendo correctamente las claves primarias ($PK$) y foráneas ($FK$).
+
+2. **Creación de tablas en SQL Server**
+   Las tablas fueron creadas mediante sentencias `CREATE TABLE`, garantizando la integridad referencial.
+
+3. **Laboratorio de desempeño**
+   Se compararon consultas activando estadísticas de **IO** y tiempo para analizar el impacto real de la estructura sobre el motor de base de datos.
+
+
+
+---
+
+## 🧠 Conclusiones Generales
+
+### Análisis Técnico de Joins
+El uso de `CROSS JOIN` genera un **producto cartesiano** entre las tablas, combinando todos los registros independientemente de su relación lógica. Esto provoca un crecimiento innecesario del conjunto de resultados:
+
+$$R = |Tabla_{A}| \times |Tabla_{B}|$$
+
+Este fenómeno conlleva un aumento significativo en las **Lecturas Lógicas** ($Logical \ Reads$), afectando negativamente el rendimiento. Por el contrario, el `INNER JOIN` optimiza la consulta procesando solo la información relevante:
+
+$$\text{INNER JOIN} \implies \downarrow \text{Lecturas Lógicas} \ + \ \uparrow \text{Velocidad}$$
+
+---
+
+## 🗂️ Estructura del repositorio
+
+* **/sql**: Scripts de creación de tablas, consultas y pruebas de desempeño.
+* **/docs**: PDF con el diagrama entidad-relación (DER) y análisis de resultados.
+
+---

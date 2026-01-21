@@ -1,14 +1,3 @@
--- Eliminar FKs si existen
-IF OBJECT_ID('FK_Venta_Cliente', 'F') IS NOT NULL
-    ALTER TABLE Venta DROP CONSTRAINT FK_Venta_Cliente;
-
-IF OBJECT_ID('FK_Venta_Producto', 'F') IS NOT NULL
-    ALTER TABLE Venta DROP CONSTRAINT FK_Venta_Producto;
-
-IF OBJECT_ID('FK_Venta_Sucursal', 'F') IS NOT NULL
-    ALTER TABLE Venta DROP CONSTRAINT FK_Venta_Sucursal;
-GO
-
 
 
 
@@ -24,22 +13,16 @@ BEGIN
 END
 GO
 
-USE RetoSQL;
-GO
-
+-- Eliminar dependencias primero
 IF OBJECT_ID('dbo.Venta', 'U') IS NOT NULL DROP TABLE dbo.Venta;
 IF OBJECT_ID('dbo.Cliente', 'U') IS NOT NULL DROP TABLE dbo.Cliente;
 IF OBJECT_ID('dbo.Producto', 'U') IS NOT NULL DROP TABLE dbo.Producto;
 IF OBJECT_ID('dbo.Sucursal', 'U') IS NOT NULL DROP TABLE dbo.Sucursal;
-IF OBJECT_ID('dbo.RawSales', 'U') IS NOT NULL DROP TABLE dbo.RawSales;
 GO
 
--- =======================================================
--- 2. TABLAS MAESTRAS (Independientes)
--- =======================================================
-
+-- =========================
 -- TABLA CLIENTE
--- Normalizamos eliminando redundancia de Emails repetidos
+-- =========================
 CREATE TABLE Cliente (
     ClienteID INT IDENTITY(1,1) PRIMARY KEY,
     Nombre VARCHAR(100) NOT NULL,
@@ -47,9 +30,9 @@ CREATE TABLE Cliente (
     CONSTRAINT UQ_Cliente_Email UNIQUE (Email)
 );
 
-
+-- =========================
 -- TABLA PRODUCTO
--- Normalizamos Categoria y Precio
+-- =========================
 CREATE TABLE Producto (
     ProductoID INT IDENTITY(1,1) PRIMARY KEY,
     Nombre VARCHAR(100) NOT NULL,
@@ -57,18 +40,18 @@ CREATE TABLE Producto (
     Precio_Unitario DECIMAL(10,2) NOT NULL
 );
 
+-- =========================
 -- TABLA SUCURSAL
--- Normalizamos Sucursal y Ciudad
+-- =========================
 CREATE TABLE Sucursal (
     SucursalID INT IDENTITY(1,1) PRIMARY KEY,
     Nombre VARCHAR(50) NOT NULL,
     Ciudad VARCHAR(50) NOT NULL
 );
 
-
--- =======================================================
--- 3. TABLA TRANSACCIONAL (Dependientes)
--- =======================================================
+-- =========================
+-- TABLA VENTA
+-- =========================
 CREATE TABLE Venta (
     VentaID INT IDENTITY(1,1) PRIMARY KEY,
     Fecha DATETIME NOT NULL,
@@ -81,9 +64,6 @@ CREATE TABLE Venta (
     CONSTRAINT FK_Venta_Sucursal FOREIGN KEY (SucursalID) REFERENCES Sucursal(SucursalID)
 );
 GO
-
-
-
 
 SELECT name
 FROM sys.tables;

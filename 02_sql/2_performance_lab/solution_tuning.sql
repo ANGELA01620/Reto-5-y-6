@@ -1,10 +1,4 @@
-/*
-RETO PARTE B: LABORATORIO DE PERFORMANCE (SOLUCIÓN)
-Objetivo: Comparar CROSS JOIN vs INNER JOIN y demostrar la optimización.
-*/
 
--- PASO 0: PREPARACIÓN
--- Activa las estadísticas para ver la "sangre" del servidor
 SET STATISTICS IO ON;  -- Muestra lecturas de disco
 SET STATISTICS TIME ON; -- Muestra tiempo de CPU
 
@@ -23,9 +17,7 @@ SELECT
 FROM Cliente c
 CROSS JOIN Producto p;
 
--- ANÁLISIS:
--- Genera (N Clientes * M Productos) filas, la mayoría combinaciones inexistentes en la realidad.
--- Logical Reads será extremadamente alto porque lee las tablas repetidamente sin índices efectivos para este join absurdo.
+
 
 -- =======================================================
 -- ESCENARIO 2: LA CONSULTA EFICIENTE (INNER JOIN)
@@ -41,6 +33,11 @@ SELECT
 FROM Venta v
 INNER JOIN Cliente c ON v.ClienteID = c.ClienteID
 INNER JOIN Producto p ON v.ProductoID = p.ProductoID;
+
+
+
+
+
 
 -- COMPARACIÓN:
 -- Los Logical Reads serán mínimos porque SQL Server usa los índices (PKs) para buscar directamente las filas relacionadas.
